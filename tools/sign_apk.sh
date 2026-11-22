@@ -4,7 +4,8 @@
 # key), it signs with the rotation lineage so debug-signed installs update in place.
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; PROJECT="$(cd "$HERE/.." && pwd)"
-conf() { sed -n "s/^$1=//p" "$PROJECT/game.conf"; }
+# game.conf, with local.conf (a private build's own key / apk name; not in git) on top
+conf() { local v=""; [ -f "$PROJECT/local.conf" ] && v="$(sed -n "s/^$1=//p" "$PROJECT/local.conf")"; [ -n "$v" ] && echo "$v" || sed -n "s/^$1=//p" "$PROJECT/game.conf"; }
 KEY="$(conf key)"; APK="$(conf apk)"
 A="$HOME/.android"; P="$(cat "$A/$KEY-release.pass")"
 IN="${1:-$PROJECT/app/build/outputs/apk/debug/app-debug.apk}"

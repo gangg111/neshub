@@ -3,13 +3,17 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+/** game.conf value, with local.conf (a private build's own id / key, not in git) on top. */
+fun conf(name: String): String? = listOf("../local.conf", "../game.conf").map { file(it) }.filter { it.exists() }
+    .firstNotNullOfOrNull { f -> f.readLines().firstOrNull { it.startsWith("$name=") }?.substringAfter("=")?.trim() }
+
 android {
     namespace = "com.dklab.nes"
     // 34, not 35: the native Termux aapt2 cannot parse android-35 resources.
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.dklab.neshub"
+        applicationId = conf("appid") ?: "com.dklab.neshub.open"
         minSdk = 29
         targetSdk = 34
         versionCode = 75
@@ -25,8 +29,7 @@ android {
             // key=<name> in game.conf -> ~/.android/<name>-release.jks (alias <name>),
             // password in ~/.android/<name>-release.pass (outside the project).
             val home = System.getProperty("user.home")
-            val key = file("../game.conf").readLines().firstOrNull { it.startsWith("key=") }
-                ?.substringAfter("=")?.trim() ?: error("game.conf: key= missing")
+            val key = conf("key") ?: error("game.conf: key= missing")
             val pass = file("$home/.android/$key-release.pass").readText().trim()
             storeFile = file("$home/.android/$key-release.jks")
             storePassword = pass
