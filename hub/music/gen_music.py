@@ -143,7 +143,7 @@ def sfx():
     S["select"] = song(240, {0: {"program": 1, "notes": [(0, .25, 76, 100), (.25, .5, 83, 100)]}})
     S["back"] = song(240, {0: {"program": 1, "notes": [(0, .25, 83, 100), (.25, .5, 76, 100)]}})
     S["flap"] = song(240, {9: {"notes": [(0, .15, 42, 90)]}, 2: {"notes": [(0, .2, 52, 90)]}})
-    # cassette going in: noise thump + triangle dropping an octave
+    # cartridge going in: noise thump + triangle dropping an octave
     S["insert"] = song(240, {9: {"notes": [(0, .4, 36, 127), (0, .3, 38, 70)]},
                              2: {"notes": [(0, .6, 45, 110)], "bends": [(0, 8192), (.1, 6000), (.3, 4100), (.55, 2048)]}})
     # power on: pulse sweeping up two octaves (bend range +/-24 -> 8191 = +24 st)

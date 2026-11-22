@@ -44,7 +44,7 @@ class NetSession(private val build: Int, private val myName: String, private val
     @Volatile var peerName = ""; private set
     /** The game being played, set by the host's [launch]; null while both are in the hub. */
     @Volatile var start: Start? = null; private set
-    /** The hub's shared state: the cassette player 1 has selected, and whether a game runs. */
+    /** The hub's shared state: the cartridge player 1 has selected, and whether a game runs. */
     @Volatile var hubSel = ""; private set
     @Volatile var launched = false; private set
     /** Which game of the connection the streams belong to (packets of an earlier one are dropped). */
@@ -122,7 +122,7 @@ class NetSession(private val build: Int, private val myName: String, private val
 
     // ------------------------------------------------------------- the shared hub
 
-    /** Host: the cassette selected on its shelf (the guest's shelf follows). */
+    /** Host: the cartridge selected on its shelf (the guest's shelf follows). */
     @Synchronized fun select(gameId: String) { if (hubSel != gameId) { hubSel = gameId; lastHub = -1.0 } }   // goes out on the next poll
 
     /** Host: [start] runs on both phones now (a new game: fresh streams). */

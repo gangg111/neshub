@@ -172,7 +172,7 @@ object Net {
         direct ?: WifiDirect(c.applicationContext, { activityRef.get() }, ::log).also { direct = it }
 
     /** Called (on the network thread) when what the hub shows changed: phase, peer, the
-     *  selected cassette, a game started or ended. The hub pushes it to its page at once. */
+     *  selected cartridge, a game started or ended. The hub pushes it to its page at once. */
     @Volatile var onChange: (() -> Unit)? = null
 
     /** This phone's addresses, read once a few seconds (asking Android is slow on old phones). */

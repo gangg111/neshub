@@ -62,7 +62,7 @@ class HubActivity : Activity() {
                     }
                     return
                 }
-                // the hub plays the cassette going in first, then calls netGuestGo()
+                // the hub plays the cartridge going in first, then calls netGuestGo()
                 if (s.epoch != shownEpoch) {
                     shownEpoch = s.epoch
                     js("window.nesHubNetLaunch ? window.nesHubNetLaunch(${JSONObject.quote(st.gameId)}) : NesHub.netGuestGo()")
