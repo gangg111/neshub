@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gbc_background">#FF0B0E14</color>
+    <color name="gbc_panel">#FF141A26</color>
+    <color name="gbc_accent">#FF9BBC0F</color>
+    <color name="gbc_text">#FFE6E9F0</color>
+    <color name="gbc_screen_bg">#FF000000</color>
+    <color name="ic_launcher_background">#FF111111</color>
+</resources>

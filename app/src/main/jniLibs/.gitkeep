@@ -1,0 +1,3 @@
+The native emulator core (built by aarch64-linux-android-clang, not by Gradle)
+belongs in arm64-v8a/ next to this file. Gradle packages whatever is here as-is:
+no stripping, no compression.

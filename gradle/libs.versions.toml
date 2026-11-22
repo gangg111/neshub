@@ -1,0 +1,18 @@
+# compileSdk is pinned to 34: the native Termux aapt2 cannot parse android-35
+# resources. Every AndroidX version below therefore has an AAR minCompileSdk <= 34.
+# Nothing here talks to the network, ships analytics, or pulls in Play Services.
+[versions]
+agp = "8.7.3"
+kotlin = "2.0.21"
+coreKtx = "1.13.1"
+activity = "1.9.0"
+
+# Declared but intentionally NOT used: the app ships with zero dependencies so the
+# merged manifest stays free of permissions. See app/build.gradle.kts.
+[libraries]
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

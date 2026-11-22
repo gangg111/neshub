@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Platform Material dark theme, no ActionBar. Using the platform theme instead
+         of AppCompat keeps the dependency list (and the APK) as small as possible. -->
+    <style name="Theme.GBCPlayer" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/gbc_screen_bg</item>
+        <item name="android:statusBarColor">@color/gbc_screen_bg</item>
+        <item name="android:navigationBarColor">@color/gbc_screen_bg</item>
+        <item name="android:colorAccent">@color/gbc_accent</item>
+        <item name="android:textColorPrimary">@color/gbc_text</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>
