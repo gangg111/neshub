@@ -5,7 +5,7 @@ cartridge shelf and a Famicom-style console, and a native player built on the
 [FCEUmm](https://github.com/libretro/libretro-fceumm) core.
 
 **No games are included.** Add your own cartridge dumps (`.nes`) with the "+"
-cassette on the shelf. The hub only accepts games it has a module for (see below).
+cartridge on the shelf. The hub only accepts games it has a module for (see below).
 
 ## What it does
 

@@ -149,16 +149,16 @@ body {
 
 .stage { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
 .carousel { position: relative; width: 100%; height: 100%; touch-action: pan-y; }
-/* cassette size and centre line live on the stage, so the arrows can sit above the cassettes */
+/* cartridge size and centre line live on the stage, so the arrows can sit above the cartridges */
 .stage { --w: clamp(170px, 30vh, 300px); --cy: 50%; }
 .cart { position: absolute; left: 50%; top: var(--cy);
-  /* Famicom cassette proportions (wide, short) */
+  /* Famicom cartridge proportions (wide, short) */
   width: var(--w); height: calc(var(--w) * .74); margin-left: calc(var(--w) / -2); margin-top: calc(var(--w) * -.37);
   transition: transform .45s cubic-bezier(.2,.9,.25,1.1), opacity .35s, filter .35s; cursor: pointer; will-change: transform; }
 .cart .body { position: absolute; inset: 0; border-radius: 10px 10px 4px 4px;
   background: linear-gradient(180deg, var(--plastic-hi), var(--plastic) 40%, var(--plastic-lo));
   border: 3px solid var(--ink); box-shadow: inset -6px 0 0 rgba(0,0,0,.08), inset 6px 0 0 rgba(255,255,255,.25), 0 18px 30px rgba(0,0,0,.55); }
-/* Famicom-style cassette: short and wide, coloured plastic, big front label, grip lines */
+/* Famicom-style cartridge: short and wide, coloured plastic, big front label, grip lines */
 .cart .body { border-radius: 8px 8px 3px 3px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--shell, #e9dfc6) 100%, white 25%), var(--shell, #e9dfc6) 35%, color-mix(in srgb, var(--shell, #e9dfc6) 80%, black)); }
 .cart .ridges { position: absolute; left: 6%; right: 6%; top: 4%; height: 9%;
@@ -172,7 +172,7 @@ body {
 .cart.bob { animation: bob 2.4s ease-in-out infinite; }
 @keyframes bob { 50% { translate: 0 -8px; } }
 
-.arrow { position: absolute; top: max(6px, calc(var(--cy) - var(--w) * .37 - 62px)); z-index: 20;   /* above the faded side cassettes (z 8-10) */ width: 52px; height: 52px; border-radius: 50%;
+.arrow { position: absolute; top: max(6px, calc(var(--cy) - var(--w) * .37 - 62px)); z-index: 20;   /* above the faded side cartridges (z 8-10) */ width: 52px; height: 52px; border-radius: 50%;
   background: var(--plate); border: 2px solid var(--ink); color: var(--plastic-hi); font-size: 22px; cursor: pointer;
   box-shadow: 0 3px 0 var(--ink); display: grid; place-items: center; }
 .arrow:disabled { opacity: .28; cursor: default; box-shadow: none; pointer-events: none; }
@@ -220,7 +220,7 @@ body {
 .icon-btn { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; font-size: 18px; }
 .pads { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-pixel); font-size: 12px; color: #9fe39a; }
 .pads[hidden] { display: none; }
-/* cassette label: the game's own picture under its logo */
+/* cartridge label: the game's own picture under its logo */
 .cart .label.pic { background: linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.55)), var(--pic) center / cover; }
 .cart .label.pic img { filter: drop-shadow(0 2px 0 rgba(0,0,0,.8)) drop-shadow(0 0 6px rgba(0,0,0,.6)); }
 .cart.add .label { background: repeating-linear-gradient(45deg, #1c1622 0 10px, #241b2b 10px 20px); }
@@ -236,12 +236,12 @@ body {
 .grid button { background: #1a1320; border: 2px solid #3a2e44; border-radius: 10px; padding: 8px; cursor: pointer; display: grid; gap: 6px;
   color: var(--text); font-family: var(--font-ui); font-size: 13px; }
 .grid button.cur { border-color: var(--red); }
-/* each game in the grid is a small copy of its shelf cassette */
+/* each game in the grid is a small copy of its shelf cartridge */
 .grid button { background: none; border-color: transparent; }
 .grid .cart { position: relative; left: auto; top: auto; margin: 0; width: 100%; height: auto; aspect-ratio: 1 / .74;
   --w: 150px; transition: none; filter: none; opacity: 1; }
 .grid button.cur .cart .body { box-shadow: 0 0 0 3px var(--red), 0 0 18px rgba(245,43,38,.35); }
-/* "All games" is a wooden cabinet: planks slide in, then each cassette drops onto its shelf */
+/* "All games" is a wooden cabinet: planks slide in, then each cartridge drops onto its shelf */
 .grid { display: block; padding: 10px 14px 4px; border-radius: 10px;
   background: repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 2px, transparent 2px 46px),
               repeating-linear-gradient(90deg, rgba(255,210,150,.04) 0 1px, transparent 1px 13px),
@@ -294,13 +294,13 @@ body {
 .a-btn:active .disc { transform: translateY(3px); box-shadow: inset 0 -3px 0 #c01a16, 0 1px 0 var(--ink); }
 
 /* Famicom-like console, drawn in two SVG layers: everything behind the cartridge slot
-   (back) and everything in front of it (front). The inserted cassette slides between
+   (back) and everything in front of it (front). The inserted cartridge slides between
    them, so the deck hides its lower part like a real top-loader. */
 .console-wrap { position: relative; width: min(820px, 100%, 70vh); margin-inline: auto; aspect-ratio: 1250 / 700; z-index: 1; flex: none; }
 .console-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .console-wrap .front { z-index: 3; pointer-events: none; }
 .console-wrap .back { z-index: 1; }
-.console-wrap .slotmark { position: absolute; left: 22.8%; width: 53.44%; top: 31.14%; height: 0; }   /* the cassette is exactly as wide as the red flaps: x 335-1003, front edge y 298 (viewBox 50 80 1250 700) */
+.console-wrap .slotmark { position: absolute; left: 22.8%; width: 53.44%; top: 31.14%; height: 0; }   /* the cartridge is exactly as wide as the red flaps: x 335-1003, front edge y 298 (viewBox 50 80 1250 700) */
 /* the two red flaps of the slot fold inward (down into the console) */
 #layer11 path { transform-box: fill-box; transform-origin: 50% 0%; transition: transform .28s cubic-bezier(.5,0,.75,0), filter .28s; }
 .console-wrap.open #layer11 path { transform: scaleY(.08); filter: brightness(.45); }
@@ -325,13 +325,13 @@ body {
 
 .mute[aria-pressed="false"]::after { content: ""; }
 @media (orientation: portrait) { .stage { --w: clamp(160px, 50vw, 280px); --cy: 54%; } }
-/* landscape: name, title frame and A on the left; cassettes above the console on the right */
+/* landscape: name, title frame and A on the left; cartridges above the console on the right */
 @media (orientation: landscape) {
   #shelf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); grid-template-rows: auto minmax(0, 1fr) auto auto;
     grid-template-areas: "top top" "info stage" "info console" "pad pad"; column-gap: 16px; }
   #shelf .topbar { grid-area: top; }
   #shelf .stage { grid-area: stage; }
-  /* cassettes further along must not slide over the title frame / description in the left column */
+  /* cartridges further along must not slide over the title frame / description in the left column */
   #shelf .stage { clip-path: inset(-50vh 0 -50vh 0); }
   #shelf .info { grid-area: info; align-content: center; flex-direction: column; }
   #shelf .namebar { flex-direction: column; }
@@ -537,7 +537,7 @@ const I18N = {
     musicOn: "♪ Muzyka", musicOff: "♪ Cisza", prevGame: "Poprzednia gra", nextGame: "Następna gra",
     play: "GRAJ", mods: "Modyfikacje: {n}", loading: "WCZYTYWANIE", back: "◄ Wróć do półki",
     preview: "Podgląd w przeglądarce: tutaj aplikacja uruchomi „{title}”.",
-    sticker1: ["• Wyjmuj kasetę", "  po wyłączeniu POWER"], sticker2: ["• RESET nie kasuje", "  zapisanych stanów"],
+    sticker1: ["• Wyjmuj kartridż", "  po wyłączeniu POWER"], sticker2: ["• RESET nie kasuje", "  zapisanych stanów"],
     twoPlayers: "Dwóch graczy", noSlowdown: "Bez spowolnień", inPolish: "Po polsku", translatedBy: "Spolszczenie: {who}",
     lives: "Życia", invincible: "Nieśmiertelność", bestWeapon: "Najlepsza broń", stageSelect: "Wybór etapu", infiniteMagic: "Nieskończona magia",
     allWeapons: "Wszystkie bronie", bugFixed: "Naprawiony błąd gry",
@@ -556,7 +556,7 @@ const I18N = {
     musicOn: "♪ Music", musicOff: "♪ Muted", prevGame: "Previous game", nextGame: "Next game",
     play: "PLAY", mods: "Mods: {n}", loading: "LOADING", back: "◄ Back to the shelf",
     preview: "Browser preview: this is where the app starts “{title}”.",
-    sticker1: ["• Remove the cassette", "  with POWER off"], sticker2: ["• RESET keeps your", "  save states"],
+    sticker1: ["• Remove the cartridge", "  with POWER off"], sticker2: ["• RESET keeps your", "  save states"],
     twoPlayers: "Two players", noSlowdown: "No slowdown", inPolish: "In Polish", translatedBy: "Polish translation: {who}",
     lives: "Lives", invincible: "Invincibility", bestWeapon: "Best weapon", stageSelect: "Stage select", infiniteMagic: "Infinite magic",
     allWeapons: "All weapons", bugFixed: "Game bug fixed",
@@ -605,7 +605,7 @@ function refreshStats() {
   try { if (window.NesHub && NesHub.stats) stats = JSON.parse(NesHub.stats(SAMPLE.concat(customs).map(g => g.id).join(","))); } catch (e) {}
 }
 const ADD_CART = { id: "__add", add: true, title: "" };
-/* favourites first, then the rest; both alphabetical; the "add a game" cassette last */
+/* favourites first, then the rest; both alphabetical; the "add a game" cartridge last */
 function orderedGames() {
   const all = SAMPLE.concat(customs), fav = g => !!(stats[g.id] && stats[g.id].fav);
   const byTitle = (a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
@@ -687,10 +687,10 @@ window.__audioCheck = async () => {
    Top-loading console in the spirit of the 1983 Japanese original (cream body, dark red
    trim, pad holders on both sides), with our own name instead of any trademark. */
 /* The console is the owner's own drawing: hub/console.svg (Inkscape, 26 named layers).
-   Layers 01-12 (base, body, side modules, rear shelf, ribs) sit behind the cassette;
+   Layers 01-12 (base, body, side modules, rear shelf, ribs) sit behind the cartridge;
    13-26 (eject lever, buttons, front band, outlines) in front of it. The slot is the red
    band (layer 11): two flaps, x 335-1003, y 257 (back edge) to 300 (front edge). On
-   insert the flaps fold into the console, a dark opening shows and the cassette sinks
+   insert the flaps fold into the console, a dark opening shows and the cartridge sinks
    into it, disappearing at the front edge; the eject lever stays in front of it. */
 const CONSOLE_BACK = "<g data-label=\"01 Dolna podstawa\" id=\"layer1\"><path d=\"M69 687 L1276 687 L1272 745 Q1271 762 1250 762 L94 762 Q74 762 73 741 Z\" fill=\"#591b25\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"02 Front obudowy\" id=\"layer2\"><path d=\"M70 598 Q70 585 88 583 L1258 583 Q1277 583 1277 608 L1274 714 Q1274 728 1254 728 L94 728 Q74 728 73 709 Z\" fill=\"#e1c69b\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"03 Lewy modu\u0142 tylny\" id=\"layer3\"><path d=\"M149 212 Q145 201 158 190 L280 111 Q289 105 309 109 L339 98 Q355 98 362 118 L367 229 L260 362 L163 390 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"04 Lewy modu\u0142 \u015brodkowy\" id=\"layer4\"><path d=\"M200 203 Q201 189 213 181 L317 102 Q332 93 343 105 L350 114 Q358 121 350 132 L252 232 L249 358 L209 367 Z\" fill=\"#a32b3b\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"05 Lewy modu\u0142 przedni\" id=\"layer5\"><path d=\"M236 213 Q235 200 246 190 L338 113 Q350 107 357 120 L367 229 L270 357 L252 361 L250 234 Z\" fill=\"#74212d\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"06 Prawy modu\u0142 tylny\" id=\"layer6\"><path d=\"M977 117 Q976 100 992 99 L1008 95 Q1016 92 1029 102 L1187 193 Q1201 201 1202 222 L1187 416 L1071 365 L969 235 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"07 Prawy modu\u0142 \u015brodkowy\" id=\"layer7\"><path d=\"M991 109 Q1000 94 1012 103 L1126 191 Q1146 204 1147 226 L1142 378 L1100 367 L1097 221 Z\" fill=\"#a02c3b\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"08 Prawy modu\u0142 przedni\" id=\"layer8\"><path d=\"M1009 99 Q1020 91 1031 104 L1179 190 Q1198 200 1199 223 L1190 403 L1150 379 L1149 224 Q1149 205 1135 192 Z\" fill=\"#77212d\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"09 Tylna p\u00f3\u0142ka\" id=\"layer9\"><path d=\"M362 205 L481 205 Q490 205 497 240 L844 240 Q849 205 859 205 L971 205 L982 255 L363 255 Z\" fill=\"#f6e5bf\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"10 G\u00f3rny korpus\" id=\"layer10\"><path d=\"M213 364 L269 363 L365 253 L550 253 L568 240 L780 240 L796 253 L979 253 L1074 362 L1129 365 Q1150 367 1167 400 L1275 592 Q1287 616 1255 617 L94 617 Q63 617 70 597 L161 407 Q178 371 213 364 Z\" fill=\"#f6e5bf\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><path class=\"slot-hole\" d=\"M366 257 L977 257 L1003 300 L335 300 Z\" fill=\"#140809\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\"/><g data-label=\"11 Tylne czerwone panele\" id=\"layer11\"><path d=\"M366 257 L557 257 L546 300 L335 300 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M790 257 L977 257 L1003 299 L800 299 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"12 \u017bebra z ty\u0142u\" id=\"layer12\"><path d=\"M520 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M544 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M568 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M592 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M616 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M640 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M664 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M688 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M712 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M736 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M760 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M784 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M808 239 l8 0 l-4 16 l-8 0 Z\" fill=\"#f6e5bf\" stroke=\"none\" stroke-width=\"0\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>";
 const CONSOLE_FRONT = "<g data-label=\"13 Centralna pokrywa\" id=\"layer13\"><path d=\"M572 247 L773 247 Q783 247 787 266 L808 400 L538 400 L558 267 Q560 250 572 247 Z\" fill=\"#591b25\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M567 264 L781 264 L799 371 L547 371 Z\" fill=\"#75202d\" stroke=\"#391619\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M541 371 L804 371 L808 400 L537 400 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"14 Lewe pole przycisku\" id=\"layer14\"><path d=\"M260 382 L506 382 Q516 382 513 394 L502 429 L228 429 Q223 428 229 418 Z\" fill=\"#fff0d0\" stroke=\"#391619\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"15 Prawe pole przycisku\" id=\"layer15\"><path d=\"M845 381 L1089 381 Q1098 381 1107 392 L1122 424 Q1124 430 1113 430 L849 430 Q842 430 839 420 L836 391 Q834 382 845 381 Z\" fill=\"#fff0d0\" stroke=\"#391619\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"16 Lewy przycisk\" id=\"layer16\"><path d=\"M370 387 L459 387 L475 419 L356 419 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"17 Prawy przycisk\" id=\"layer17\"><path d=\"M875 387 L974 387 L994 419 L867 419 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"18 Lewa strza\u0142ka\" id=\"layer18\"><path d=\"M351 317 L489 317 L479 345 L424 345 L456 351 L402 363 L352 351 L385 345 L338 345 Z\" fill=\"none\" stroke=\"#bca37e\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"19 Prawa strza\u0142ka\" id=\"layer19\"><path d=\"M850 317 L988 317 L1003 345 L960 345 L991 351 L942 363 L889 351 L921 345 L863 345 Z\" fill=\"none\" stroke=\"#bca37e\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"20 Czerwony pasek frontowy\" id=\"layer20\"><path d=\"M179 465 L1161 463 Q1172 463 1176 477 L1189 526 Q1192 540 1178 540 L173 540 Q158 540 160 527 L173 477 Q175 467 179 465 Z\" fill=\"#85202f\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"21 Linie na pasku\" id=\"layer21\"><path d=\"M167 519 H497 M884 519 H1181\" fill=\"none\" stroke=\"white\" stroke-width=\"6\"/></g><g data-label=\"22 Logo NES HUB\" id=\"layer22\"><text x=\"515\" y=\"527\" fill=\"#fff\" font-family=\"DejaVu Sans,Arial,sans-serif\" font-size=\"70\" font-weight=\"bold\">NES HUB</text></g><g data-label=\"23 Ma\u0142y znak\" id=\"layer23\"><g fill=\"white\"><path d=\"M237 507 l20 -29 h9 l-20 29 Z M260 507 l20 -29 h9 l-20 29 Z\"/><circle cx=\"278\" cy=\"483\" r=\"5\"/><circle cx=\"295\" cy=\"483\" r=\"5\"/><circle cx=\"290\" cy=\"495\" r=\"5\"/></g><g data-label=\"24 Dolny pasek\" id=\"layer24\"><path d=\"M75 725 H1271 V748 Q1270 762 1252 762 H95 Q75 762 75 747 Z\" fill=\"#621d28\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"25 Przedni zatrzask\" id=\"layer25\"><path d=\"M748 667 L931 667 Q960 667 961 695 L955 734 Q951 759 927 760 L749 760 Q724 760 721 737 L720 698 Q720 670 748 667 Z\" fill=\"#67202c\" stroke=\"#391619\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M748 677 L928 677 Q953 677 955 700 L951 736 Q949 754 927 755 L751 755 Q729 755 726 735 L725 704 Q725 681 748 677 Z\" fill=\"#762330\" stroke=\"#391619\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g data-label=\"26 Kontury detali\" id=\"layer26\"><path d=\"M153 231 L160 388 M201 202 L209 365 M234 211 L249 358 M1001 111 L1099 222 L1100 366 M1021 101 L1147 219 L1146 381 M366 238 L483 238 M856 238 L973 238\" fill=\"none\" stroke=\"#391619\" stroke-width=\"4\"/></g>";
@@ -712,7 +712,7 @@ function cartHtml(g) {
   return `<div class="body"></div><div class="ridges"></div>
     <div class="label${pic}">${g.logo ? `<img alt="" src="${g.logo}">` : ""}</div><div class="arrow-emboss"></div>`;
 }
-/* (re)builds the shelf; keeps the cassette with keepId selected */
+/* (re)builds the shelf; keeps the cartridge with keepId selected */
 function buildShelf(keepId) {
   refreshStats();
   games = orderedGames();
@@ -802,7 +802,7 @@ $("tv").addEventListener("click", e => { e.stopPropagation(); flipTv(); });
 $("tv").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); flipTv(); } });
 function go(i) {
   if (busy || netLocked()) return;
-  // no wrap-around: the arrows show which way there are more cassettes
+  // no wrap-around: the arrows show which way there are more cartridges
   const n = Math.max(0, Math.min(games.length - 1, i));
   if (n === sel) return;
   sel = n; sfx.move(); layout();
@@ -817,7 +817,7 @@ function launch(fromHost) {
   const el = carts[sel], con = $("console"), app = $("app");
   sfx.select();
   const A = app.getBoundingClientRect(), r = el.getBoundingClientRect(), slot = $("slotmark").getBoundingClientRect();
-  // a copy of the cassette travels in the console's stacking context: above the back
+  // a copy of the cartridge travels in the console's stacking context: above the back
   // layer, below the front layer, so the deck covers it as it goes in
   const fly = el.cloneNode(true);
   // no selection ring once it leaves the shelf (its red corners showed above the slot)
@@ -986,7 +986,7 @@ $("netList").addEventListener("click", e => { const b = e.target.closest("button
 $("netSheet").querySelector("[data-close]").addEventListener("click", () => { if (netTimer && netRole === "join" && window.NesHub && NesHub.netStop) NesHub.netStop(); netReset(); });
 /* the shared hub: player 1 picks, player 2's shelf follows (NetSession HUB packets) */
 var netSt = { role: "" }, netWasPlaying = false;
-/* player 1 started a game: player 2's hub shows the same cassette going in, then starts it */
+/* player 1 started a game: player 2's hub shows the same cartridge going in, then starts it */
 window.nesHubNetLaunch = id => {
   const i = games.findIndex(g => g.id === id);
   if (i >= 0 && i !== sel) { sel = i; layout(); }
