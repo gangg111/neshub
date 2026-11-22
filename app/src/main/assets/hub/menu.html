@@ -424,7 +424,6 @@ body {
 #netSheet .ttx-list button { display: grid; grid-template-columns: 1fr auto; column-gap: 1ch; text-align: left;
   padding: .35em .8ch; background: #000; border: .18em solid #fff; color: #fff; font: inherit; cursor: pointer; }
 #netSheet .ttx-list button:nth-child(even) { color: #0f0; border-color: #0f0; }
-#netSheet .ttx-list button::after { content: attr(data-p); color: #000; background: #ff0; padding: 0 .6ch; grid-column: 2; grid-row: 1; align-self: start; }
 #netSheet .ttx-list button small { grid-column: 1 / -1; font-size: 1em; color: #0ff; opacity: .85; }
 #netSheet .ttx-list button:active, #netSheet .ttx-list button:focus-visible { background: #00f; outline: none; }
 #netSheet .ttx-list button.net-old { color: #888; border-color: #888; border-style: dashed; cursor: not-allowed; }
@@ -507,12 +506,12 @@ body {
      <h2 class="ttx-title" data-i18n="netTitle"></h2>
      <p class="net-intro" id="netIntro"></p>
      <div class="ttx-list" id="netRoles">
-      <button data-role="host" data-p="101"><span data-i18n="netHost"></span><small id="netHostGame"></small></button>
-      <button data-role="join" data-p="102"><span data-i18n="netJoin"></span><small data-i18n="netJoinHint"></small></button>
+      <button data-role="host"><span data-i18n="netHost"></span><small id="netHostGame"></small></button>
+      <button data-role="join"><span data-i18n="netJoin"></span><small data-i18n="netJoinHint"></small></button>
      </div>
      <div class="ttx-list" id="netModes" hidden>
-      <button data-mode="wifi" data-p="201"><span data-i18n="netWifi"></span><small data-i18n="netWifiHint"></small></button>
-      <button data-mode="direct" data-p="202"><span data-i18n="netDirect"></span><small data-i18n="netDirectHint"></small></button>
+      <button data-mode="wifi"><span data-i18n="netWifi"></span><small data-i18n="netWifiHint"></small></button>
+      <button data-mode="direct"><span data-i18n="netDirect"></span><small data-i18n="netDirectHint"></small></button>
      </div>
      <div class="ttx-list" id="netList" hidden></div>
      <p class="net-note" id="netNote" role="status"></p>
@@ -986,7 +985,7 @@ function netPoll() {
     $("netList").dataset.ids = offers.map(o => o.id).join(",");
     $("netList").innerHTML = offers.map(o => o.ok === false
       ? `<button disabled class="net-old"><span>${esc(o.name)}</span><small>${esc(t("netOtherVersion").replace("%h", o.version || "?").replace("%m", st.myVersion || "?"))}</small></button>`
-      : `<button data-id="${esc(o.id)}" data-p="${301 + offers.indexOf(o)}"><span>${esc(o.name)}</span><small>${esc(!o.version ? o.id : /^\d/.test(o.version) ? t("netVersion") + " " + o.version : o.version)}</small></button>`).join("");
+      : `<button data-id="${esc(o.id)}"><span>${esc(o.name)}</span><small>${esc(!o.version ? o.id : /^\d/.test(o.version) ? t("netVersion") + " " + o.version : o.version)}</small></button>`).join("");
   }
   let note = st.note || (st.phase === "JOINING" ? t("netJoining") : st.phase === "ENDED" ? (st.reason === "VERSION" ? t("netRefusedVersion")
     : t("netEnded") + (st.reason ? " (" + st.reason + (st.error ? ": " + st.error : "") + ")" : ""))
