@@ -61,3 +61,4 @@ tools/contra_fix/
 tools/padout/
 local.conf
 tools/artgen
+tools/mmbot

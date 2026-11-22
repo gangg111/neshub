@@ -197,20 +197,23 @@ class HubActivity : Activity() {
         try {
             val art = artRecipes.optJSONObject(meta.optString("module"))
                 ?.let { r -> runCatching { ArtGen.make(rom, r) }.onFailure { Log.e(TAG, "art", it) }.getOrNull() }
-            if (art != null) { for (k in art.keys()) meta.put(k, art.get(k)); meta.put("art", 1) }
+            if (art != null) { for (k in art.keys()) meta.put(k, art.get(k)); meta.put("art", recipeVersion(meta.optString("module"))) }
             else titleShot(rom)?.let { meta.put("shot", it) }
         } finally { artBusy = false }
     }
 
-    /** Games added before the hub made cartridge art: make it now, once, in the background. */
+    /** Which recipe made a cartridge's art: a changed recipe (a better clip) makes it again. */
+    private fun recipeVersion(module: String) = artRecipes.optJSONObject(module)?.toString()?.hashCode() ?: 0
+
+    /** Games added before the hub made cartridge art, or by an older recipe: make it now, in the background. */
     private fun backfillArt() = thread(name = "hub-art") {
         customDir.listFiles { f -> f.name.endsWith(".json") }?.sortedBy { it.name }?.forEach { f ->
             runCatching {
                 val meta = JSONObject(f.readText())
-                if (meta.has("art")) return@runCatching
                 val rom = File(customDir, f.name.removeSuffix(".json") + ".nes").readBytes()
                 val module = NativeBridge.nativeDetectGame(rom)
                 if (!artRecipes.has(module)) return@runCatching
+                if (meta.optInt("art") == recipeVersion(module)) return@runCatching   // made by this recipe
                 meta.put("module", module)
                 addArt(meta, rom)
                 if (!meta.has("art")) return@runCatching
