@@ -85,6 +85,12 @@ class HubActivity : Activity() {
     private var refusedEpoch = -1
     private val hubPrefs by lazy { getSharedPreferences("hub", MODE_PRIVATE) }
     private val customDir by lazy { File(filesDir, "custom").apply { mkdirs() } }
+    /** Recipes for a cartridge's pictures, by game module (ArtGen.kt). */
+    private val artRecipes by lazy { runCatching { JSONObject(assets.open("hub/art.json").use { it.reader().readText() }) }.getOrDefault(JSONObject()) }
+    /** The emulator core is one per process: no game starts while art is being made. */
+    private val artLock = Any()
+    @Volatile private var artBusy = false
+    private var backfilled = false
 
     private val padListener = object : InputManager.InputDeviceListener {
         override fun onInputDeviceAdded(id: Int) = pushPads()
@@ -171,17 +177,47 @@ class HubActivity : Activity() {
             File(customDir, "$id.nes").writeBytes(rom)
             val name = (uri.lastPathSegment ?: "Gra").substringAfterLast('/').substringAfterLast(':')
                 .substringBeforeLast('.').replace(Regex("\\s*[\\[(].*?[\\])]"), "").trim().ifEmpty { "Gra" }
-            val shot = titleShot(rom)
             val meta = JSONObject().apply {
                 put("id", id); put("title", name); put("custom", true)
-                put("year", ""); put("by", "z telefonu")
-                if (shot != null) put("shot", shot)
+                put("year", ""); put("by", "z telefonu"); put("module", module)
             }
+            js("window.nesHubAdding && window.nesHubAdding(true)")
+            addArt(meta, rom)
             File(customDir, "$id.json").writeText(meta.toString())
             meta
         }
         result.onSuccess { js("window.nesHubAdded && window.nesHubAdded(${JSONObject.quote(it.toString())})") }
-            .onFailure { Log.e(TAG, "add game", it); js("window.nesHubToast && window.nesHubToast(${JSONObject.quote("Nie dodano: " + (it.message ?: "błąd pliku"))})") }
+            .onFailure { Log.e(TAG, "add game", it); js("window.nesHubAdding && window.nesHubAdding(false)"); js("window.nesHubToast && window.nesHubToast(${JSONObject.quote("Nie dodano: " + (it.message ?: "błąd pliku"))})") }
+    }
+
+    /** The cartridge's logo, title screen and clip, made from the dump by the module's
+     *  recipe; a game without one gets its busiest title frame. */
+    private fun addArt(meta: JSONObject, rom: ByteArray) = synchronized(artLock) {
+        artBusy = true
+        try {
+            val art = artRecipes.optJSONObject(meta.optString("module"))
+                ?.let { r -> runCatching { ArtGen.make(rom, r) }.onFailure { Log.e(TAG, "art", it) }.getOrNull() }
+            if (art != null) { for (k in art.keys()) meta.put(k, art.get(k)); meta.put("art", 1) }
+            else titleShot(rom)?.let { meta.put("shot", it) }
+        } finally { artBusy = false }
+    }
+
+    /** Games added before the hub made cartridge art: make it now, once, in the background. */
+    private fun backfillArt() = thread(name = "hub-art") {
+        customDir.listFiles { f -> f.name.endsWith(".json") }?.sortedBy { it.name }?.forEach { f ->
+            runCatching {
+                val meta = JSONObject(f.readText())
+                if (meta.has("art")) return@runCatching
+                val rom = File(customDir, f.name.removeSuffix(".json") + ".nes").readBytes()
+                val module = NativeBridge.nativeDetectGame(rom)
+                if (!artRecipes.has(module)) return@runCatching
+                meta.put("module", module)
+                addArt(meta, rom)
+                if (!meta.has("art")) return@runCatching
+                f.writeText(meta.toString())
+                js("window.nesHubAdded && window.nesHubAdded(${JSONObject.quote(meta.toString())}, true)")
+            }.onFailure { Log.e(TAG, "art for ${f.name}", it) }
+        }
     }
 
     /** The title screen: run the game a few seconds with no input, keep the busiest frame. */
@@ -284,6 +320,10 @@ class HubActivity : Activity() {
         @JavascriptInterface
         fun launchGame(id: String, title: String) = runOnUiThread {
             if (inGame) return@runOnUiThread
+            if (artBusy) {
+                val msg = if (Locale.getDefault().language == "pl") "Chwila, hub przygotowuje kartridż" else "One moment, the hub is preparing a cartridge"
+                js("window.nesHubToast && window.nesHubToast(${JSONObject.quote(msg)})"); return@runOnUiThread
+            }
             inGame = true
             if (Net.isGuest()) { inGame = false; return@runOnUiThread }     // player 1 picks the game
             startActivity(Intent(this@HubActivity, MainActivity::class.java).putExtra(MainActivity.EXTRA_GAME, id)
@@ -355,7 +395,10 @@ class HubActivity : Activity() {
         fun pads(): Int = padCount()
 
         @JavascriptInterface
-        fun customGames(): String = customList().toString()
+        fun customGames(): String {
+            if (!backfilled) { backfilled = true; backfillArt() }
+            return customList().toString()
+        }
 
         @JavascriptInterface
         fun addGame() = runOnUiThread {

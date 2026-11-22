@@ -524,6 +524,7 @@ body {
   <div id="joke" role="alert" hidden><p></p></div>
 </div>
 
+<script src="catalog.js"></script>
 <script src="games.js"></script>
 <script>
 /* ---------------------------------------------------------- languages --
@@ -595,11 +596,17 @@ function applyLang() {
    In the app, window.NesHub (Android JavaScript interface) supplies the list and starts
    a game: NesHub.games() -> JSON array, NesHub.launch(id). In the browser the built-in
    sample list below is used and launching shows a preview screen. */
-/* Built-in cartridges come from games.js (not in the public repository; see its header). */
-const SAMPLE = window.NESHUB_GAMES || [];
+/* What the hub knows about each game (catalog.js, text only). Built-in cartridges and their
+   pictures come from games.js, which only the private build has; a game added from the
+   phone that the hub has a module for gets the same entry, its pictures made from the dump. */
+const CATALOG = window.NESHUB_CATALOG || {};
+const SAMPLE = (window.NESHUB_GAMES || []).map(a => Object.assign({}, CATALOG[a.id], a));
+const withCatalog = c => c.module && CATALOG[c.module]
+  ? Object.assign({}, c, CATALOG[c.module], { id: c.id, custom: true, module: c.module, logo: c.logo, shot: c.shot, anim: c.anim })
+  : c;
 /* games added from the phone (files/custom/ in the app), per-game progress from the app */
 let customs = [];
-try { if (window.NesHub && NesHub.customGames) customs = JSON.parse(NesHub.customGames()); } catch (e) {}
+try { if (window.NesHub && NesHub.customGames) customs = JSON.parse(NesHub.customGames()).map(withCatalog); } catch (e) {}
 let stats = {};
 function refreshStats() {
   try { if (window.NesHub && NesHub.stats) stats = JSON.parse(NesHub.stats(SAMPLE.concat(customs).map(g => g.id).join(","))); } catch (e) {}
@@ -778,7 +785,7 @@ function layout() {
   tv.classList.remove("tv-in"); void tv.offsetWidth; tv.classList.add("tv-in");
   $("count").textContent = g.add ? `+` : `${sel + 1}/${games.length - 1}`;
   const note = g.note ? [t(g.note[0], { who: g.note[1] })] : [];
-  let chips = g.add ? [t("addCartBy")] : [g.custom ? t("fromPhoneTag") : `${g.year} · ${g.by}`].concat(note, (g.tags || []).map(k => t(k)));
+  let chips = g.add ? [t("addCartBy")] : [g.custom && !g.module ? t("fromPhoneTag") : `${g.year} · ${g.by}`].concat(note, (g.tags || []).map(k => t(k)));
   let html = chips.map(c => `<span class="chip">${esc(c)}</span>`).join("");
   if (g.mods && g.mods.length) html += `<span class="chip red" title="${g.mods.map(k => t(k)).join(", ")}">${t("mods", { n: g.mods.length })}</span>`;
   if (st.best) html += `<span class="chip gold">${t("best", { n: st.best.toLocaleString(lang === "pl" ? "pl-PL" : "en-GB") })}</span>`;
@@ -924,6 +931,11 @@ function joke() {
   }, 3000);
 }
 window.nesHubJoke = joke;
+/* a real game being added: its cartridge art is made from the dump (a few seconds) */
+window.nesHubAdding = on => {
+  const el = $("joke"); clearTimeout(joke.t);
+  if (on) { el.className = ""; el.querySelector("p").textContent = t("jokeAdding"); el.hidden = false; } else el.hidden = true;
+};
 /* netplay, player 2: find a game on the network and join it (Net.kt, NetSession.kt) */
 let netTimer = 0, netAsked = 0, netRole = "";
 function netGame() { const g = games[sel]; return g && !g.add ? g : games.find(x => !x.add); }
@@ -1021,9 +1033,12 @@ function addGame() {
   sfx.select();
   if (window.NesHub && NesHub.addGame) NesHub.addGame(); else toast(t("addGameHint"));
 }
-window.nesHubAdded = json => {
-  const g = JSON.parse(json);
+/* quiet: art made later for a game already on the shelf (keep the player's place) */
+window.nesHubAdded = (json, quiet) => {
+  if (!quiet) window.nesHubAdding(false);
+  const g = withCatalog(JSON.parse(json));
   customs = customs.filter(c => c.id !== g.id).concat([g]);
+  if (quiet) { buildShelf(games[sel] && games[sel].id); return; }
   buildShelf(g.id); toast(g.title);
 };
 $("star").addEventListener("click", () => {

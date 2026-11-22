@@ -5,7 +5,12 @@ cartridge shelf and a Famicom-style console, and a native player built on the
 [FCEUmm](https://github.com/libretro/libretro-fceumm) core.
 
 **No games are included.** Add your own cartridge dumps (`.nes`) with the "+"
-cartridge on the shelf. The hub only accepts games it has a module for (see below).
+cartridge on the shelf. The hub only accepts games it has a module for (see below),
+and it makes the cartridge itself: the logo, the title screen and a gameplay clip are
+rendered on the phone from your dump by recipes in `hub/art.json` (the NES is
+deterministic, so the same buttons give the same frames on every phone;
+`tools/artgen.c` runs a recipe on a PC). Descriptions, controls and tags are in
+`hub/catalog.js`.
 
 ## What it does
 
@@ -33,8 +38,8 @@ python3 tools/hub_assets.py       # hub/menu.html -> app/src/main/assets/hub/
 ```
 
 Built-in games for a private build go in `app/src/main/assets/games/<id>.nes` with
-their shelf entries in `hub/games.js` (`window.NESHUB_GAMES = [...]`); both are kept
-out of this repository.
+their pictures in `hub/games.js` (`window.NESHUB_GAMES = [...]`); both are kept out of
+this repository. A private build's own app id and key go in `local.conf` (see `game.conf`).
 
 ## Licences
 

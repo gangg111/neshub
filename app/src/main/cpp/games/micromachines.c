@@ -8,8 +8,8 @@
  * The user's dump says horizontal mirroring in its iNES header; the board is vertical.
  * With the wrong mirroring the background under sprite 0 (bottom right, line 224) is
  * empty, the hit the race loop waits for ($CA83 BIT $2002 / BVC) never comes and
- * every race freezes on its first frame. The ROM in assets has the header fixed
- * (byte 6 bit 0 = 1); nothing in the game code is changed.
+ * every race freezes on its first frame. The core fixes the header as it loads the ROM
+ * (option nes_mirroring below); nothing in the game code is changed.
  * The menus time their palette splits with BIT $2004 reads during rendering and
  * change palettes with rendering off; both are emulated in the hub's FCEUmm (ppu.c:
  * A2004/OamBusAt for every game; the background palette hack only for this one, via
@@ -32,6 +32,7 @@ const GameSig game_sig = {71, 256, 0, sig_banks, 3};
 const GameOption game_options[] = {
     {"fceumm_overscan_v_bottom", "24"},   /* last line shown 215: hides the timing sprites at 217-224 */
     {"nes_bg_palette_hack", "enabled"},   /* nes_core.c -> FCEUmm ppu.c */
+    {"nes_mirroring", "vertical"},        /* nes_core.c: the dump's header says horizontal */
     {0, 0},
 };
 

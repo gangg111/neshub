@@ -33,4 +33,6 @@ for f in os.listdir(FONTS):
 open(os.path.join(OUT, "menu.html"), "w", encoding="utf-8").write(html)
 # the built-in games' catalogue, when this build has one (not in the public repository)
 if os.path.exists(os.path.join(SRC, "games.js")): shutil.copy(os.path.join(SRC, "games.js"), os.path.join(OUT, "games.js"))
+# what the hub knows about each game (text) and the recipes for its pictures (ArtGen.kt)
+for f in ("catalog.js", "art.json"): shutil.copy(os.path.join(SRC, f), os.path.join(OUT, f))
 print("menu.html", len(html) // 1024, "KB,", len(os.listdir(os.path.join(OUT, "fonts"))), "fonts")

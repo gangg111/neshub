@@ -278,6 +278,9 @@ GbcEmu* gbc_open(const uint8_t* rom, size_t rom_size, int sample_rate,
     ppu_bg_palette_hack = 0;
     for (const GameOption* o = game_options; o->key; ++o)
       if (!strcmp(o->key, "nes_bg_palette_hack")) ppu_bg_palette_hack = !strcmp(o->value, "enabled");
+    /* A dump whose iNES header names the wrong mirroring (the board's is fixed). */
+    for (const GameOption* o = game_options; o->key; ++o)
+      if (!strcmp(o->key, "nes_mirroring")) e->rom[6] = (uint8_t)((e->rom[6] & ~1) | !strcmp(o->value, "vertical"));
   }
   struct retro_game_info info = {"/game.nes", e->rom, e->rom_size, NULL};
   if (!retro_load_game(&info)) {

@@ -54,9 +54,10 @@ tools/viewtest
 tools/wwatch
 # ---- kept out of the public repository: the games themselves (this phone's build has them)
 app/src/main/assets/games/
-app/src/main/assets/patches/
+app/src/main/assets/patches/kickmaster/
 app/src/main/assets/hub/games.js
 hub/games.js
 tools/contra_fix/
 tools/padout/
 local.conf
+tools/artgen

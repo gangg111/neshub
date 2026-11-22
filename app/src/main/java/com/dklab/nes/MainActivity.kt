@@ -607,9 +607,14 @@ class MainActivity : Activity() {
     private val patchErrors = ArrayList<String>()
     private val userPatchDir get() = File(saveDir, "patches")
 
+    /** Built-in patches go by the game (its module), so a dump added from the phone gets them too. */
+    private val patchGame by lazy {
+        if (gameId.startsWith(CUSTOM_PREFIX)) NativeBridge.nativeDetectGame(cleanRom()).ifEmpty { gameId } else gameId
+    }
+
     private fun patches(): List<Patch> {
-        val builtIn = (assets.list("patches/$gameId") ?: emptyArray()).sorted()
-            .map { n -> Patch(n, true) { assets.open("patches/$gameId/$n").use { it.readBytes() } } }
+        val builtIn = (assets.list("patches/$patchGame") ?: emptyArray()).sorted()
+            .map { n -> Patch(n, true) { assets.open("patches/$patchGame/$n").use { it.readBytes() } } }
         val user = (userPatchDir.listFiles() ?: emptyArray()).filter { it.isFile }.sortedBy { it.name }
             .map { f -> Patch(f.name, false) { f.readBytes() } }
         return builtIn + user
