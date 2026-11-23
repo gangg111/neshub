@@ -53,7 +53,8 @@ void game_pre_frame(uint8_t* ram, uint32_t* b1, uint32_t* b2) {
 #endif
     if (a_block[p]) *b[p] &= ~a_bits;
   }
-  /* Stage select / restart: hold the stage index until the player is on screen. */
+  /* Stage select (only after "Zacznij od etapu"): hold the stage index until the player
+   * is on screen, then let the game run its stages as usual. */
   if (force_stage) {
     ram[0x75] = (uint8_t)(force_stage - 1);
     if (ram[0x668] == 0) force_seen_title = 1;
@@ -93,13 +94,17 @@ void game_after_load(uint8_t* ram) {
   /* Invincibility is an app setting, never part of a state: re-take the life counters
    * from the loaded game so the pit refund cannot give back lives it does not have. */
   for (int i = 0; i < 4; ++i) lives_lock[i] = ram[0xB3 + i];
+  /* a loaded game is never pushed to another stage */
+  force_stage = 0;
 }
 
 void game_on_power(uint8_t* ram) {
   g_ram = ram;
   a_block[0] = a_block[1] = 0;
-  /* a plain restart is held on stage 1 (start_stage overrides this right after) */
-  force_stage = 1;
+  /* A plain power-on starts on stage 1 by itself (the game clears $75 for a new game).
+   * Holding stage 1 here broke normal play: after KONTYNUUJ the hold was still active at
+   * the stage-clear talk and sent the player back to stage 1 (tools/cfstage.c). */
+  force_stage = 0;
   force_seen_title = 0;
 }
 
