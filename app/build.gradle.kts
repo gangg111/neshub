@@ -16,8 +16,8 @@ android {
         applicationId = conf("appid") ?: "com.dklab.neshub.open"
         minSdk = 29
         targetSdk = 34
-        versionCode = 82
-        versionName = "2.15.0"
+        versionCode = 83
+        versionName = "2.16.0"
         // This phone is arm64 only, and the emulator core .so is built for it alone.
         ndk { abiFilters += listOf("arm64-v8a") }
     }
